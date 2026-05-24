@@ -1,0 +1,40 @@
+.login-page {
+  max-width: 420px;
+}
+
+.login-page h2 {
+  margin-top: 0;
+}
+
+.login-form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.login-form input {
+  border: 1px solid #94a3b8;
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.6rem;
+}
+
+.login-form button {
+  margin-top: 0.5rem;
+  border: 1px solid #1d4ed8;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.login-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.status-message {
+  margin-top: 1rem;
+  padding: 0.6rem;
+  background: #f1f5f9;
+  border-radius: 0.4rem;
+}
