@@ -1,0 +1,24 @@
+<main class="app-shell">
+  <header class="app-shell__header">
+    <div>
+      <h1>{{ appTitle }}</h1>
+      @if (currentUser(); as user) {
+        <p>שלום {{ user.username | capitalizeWords }}</p>
+      } @else {
+        <p>לא מחובר</p>
+      }
+    </div>
+
+    <nav class="app-shell__nav">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/auth/login" routerLinkActive="active">Login</a>
+      @if (isLoggedIn()) {
+        <button type="button" (click)="logout()">Logout</button>
+      }
+    </nav>
+  </header>
+
+  <section class="app-shell__content">
+    <router-outlet />
+  </section>
+</main>

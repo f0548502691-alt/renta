@@ -1,0 +1,8 @@
+<section class="dashboard">
+  <h2>Dashboard</h2>
+  <p>הדף הזה מוגן ע"י Guard ונטען ב‑Lazy Loading.</p>
+
+  @if (user(); as currentUser) {
+    <p>מחובר בתור: <strong>{{ currentUser.username | capitalizeWords }}</strong></p>
+  }
+</section>
