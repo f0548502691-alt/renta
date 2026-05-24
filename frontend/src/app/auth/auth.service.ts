@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 
 const AUTH_STORAGE_KEY = 'auth-user';
 
@@ -10,7 +10,9 @@ export interface LoginPayload {
 }
 
 export interface AuthUser {
+  id: number;
   username: string;
+  email: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,12 +24,34 @@ export class AuthService {
   readonly isLoggedIn = computed(() => this.userState() !== null);
 
   login(payload: LoginPayload): Observable<AuthUser> {
-    return this.http.post<AuthUser>('/api/users/login', payload).pipe(
-      tap((user) => {
-        this.userState.set(user);
-        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-      })
-    );
+    return this.http
+      .get<
+        Array<{ id: number; username: string; password: string; email: string }>
+      >('/api/users')
+      .pipe(
+        map((users) => {
+          const matchedUser = users.find(
+            (user) => user.username === payload.username && user.password === payload.password
+          );
+
+          if (!matchedUser) {
+            throw new HttpErrorResponse({
+              status: 401,
+              error: { message: 'invalid username or password' }
+            });
+          }
+
+          return {
+            id: matchedUser.id,
+            username: matchedUser.username,
+            email: matchedUser.email
+          } satisfies AuthUser;
+        }),
+        tap((user) => {
+          this.userState.set(user);
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+        })
+      );
   }
 
   logout(): void {
