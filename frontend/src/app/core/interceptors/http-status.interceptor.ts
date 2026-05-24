@@ -32,7 +32,10 @@ export const httpStatusInterceptor: HttpInterceptorFn = (
         return throwError(
           () =>
             new HttpErrorResponse({
-              ...error,
+              headers: error.headers,
+              status: error.status,
+              statusText: error.statusText,
+              url: error.url ?? undefined,
               error: {
                 ...((typeof error.error === 'object' && error.error) || {}),
                 message: originalMessage ?? fallbackMessage
