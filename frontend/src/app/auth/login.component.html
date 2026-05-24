@@ -1,0 +1,30 @@
+<section class="login-page">
+  <h2>Login</h2>
+  <p>לבדיקה: username=<strong>demo</strong>, password=<strong>123456</strong></p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+    <label for="username">Username</label>
+    <input
+      id="username"
+      type="text"
+      formControlName="username"
+      appInvalidControl
+      [control]="form.controls.username"
+    />
+
+    <label for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      formControlName="password"
+      appInvalidControl
+      [control]="form.controls.password"
+    />
+
+    <button type="submit" [disabled]="isSubmitting()">התחבר</button>
+  </form>
+
+  @if (statusMessage()) {
+    <p class="status-message">{{ statusMessage() }}</p>
+  }
+</section>
