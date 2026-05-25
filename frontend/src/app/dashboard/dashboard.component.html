@@ -5,6 +5,52 @@
   @if (user(); as currentUser) {
     <p>מחובר בתור: <strong>{{ currentUser.username | capitalizeWords }}</strong></p>
 
+    <section class="add-task-section">
+      <h3>הוספת משימה</h3>
+
+      @if (isLoadingCategories()) {
+        <p>טוען קטגוריות...</p>
+      } @else if (categoriesError()) {
+        <p class="error-message">{{ categoriesError() }}</p>
+      } @else if (categories().length === 0) {
+        <p class="error-message">לא ניתן להוסיף משימה ללא קטגוריות.</p>
+      } @else {
+        <form [formGroup]="addTaskForm" (ngSubmit)="addTask()" class="add-task-form">
+          <label for="task-name">שם משימה</label>
+          <input id="task-name" type="text" formControlName="name" />
+
+          @if (addTaskForm.controls.name.invalid && (addTaskForm.controls.name.touched || addTaskForm.controls.name.dirty)) {
+            <small class="error-message">יש להזין שם משימה תקין (עד 150 תווים).</small>
+          }
+
+          <label for="task-description">תיאור</label>
+          <textarea id="task-description" rows="3" formControlName="description"></textarea>
+
+          <label for="task-status">סטטוס</label>
+          <select id="task-status" formControlName="status">
+            @for (status of statusOptions; track status) {
+              <option [ngValue]="status">{{ status | capitalizeWords }}</option>
+            }
+          </select>
+
+          <label for="task-category">קטגוריה</label>
+          <select id="task-category" formControlName="categoryId">
+            @for (category of categories(); track category.id) {
+              <option [ngValue]="category.id">{{ category.name }}</option>
+            }
+          </select>
+
+          <button type="submit" [disabled]="isAddingTask()">
+            {{ isAddingTask() ? 'מוסיף...' : 'הוסף משימה' }}
+          </button>
+        </form>
+      }
+
+      @if (addTaskMessage()) {
+        <p class="task-message">{{ addTaskMessage() }}</p>
+      }
+    </section>
+
     <h3>המשימות שלי</h3>
 
     @if (isLoadingTasks()) {
