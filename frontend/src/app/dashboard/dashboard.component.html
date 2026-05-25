@@ -4,5 +4,25 @@
 
   @if (user(); as currentUser) {
     <p>מחובר בתור: <strong>{{ currentUser.username | capitalizeWords }}</strong></p>
+
+    <h3>המשימות שלי</h3>
+
+    @if (isLoadingTasks()) {
+      <p>טוען משימות...</p>
+    } @else if (tasksError()) {
+      <p class="error-message">{{ tasksError() }}</p>
+    } @else if (tasks().length === 0) {
+      <p>אין כרגע משימות להצגה.</p>
+    } @else {
+      <ul class="tasks-list">
+        @for (task of tasks(); track task.id) {
+          <li>
+            <strong>{{ task.name }}</strong>
+            <p>{{ task.description || 'ללא תיאור' }}</p>
+            <small>סטטוס: {{ task.status }}</small>
+          </li>
+        }
+      </ul>
+    }
   }
 </section>
