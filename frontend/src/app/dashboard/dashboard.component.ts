@@ -9,12 +9,14 @@ import { CategoriesService } from '../services/categories.service';
 import { TasksService } from '../services/tasks.service';
 import { CapitalizeWordsPipe } from '../shared/pipes/capitalize-words.pipe';
 
-type AddTaskForm = FormGroup<{
+type AddTaskFormControls = {
   name: FormControl<string>;
   description: FormControl<string>;
   status: FormControl<TaskStatus>;
   categoryId: FormControl<number | null>;
-}>;
+};
+
+type AddTaskForm = FormGroup<AddTaskFormControls>;
 
 @Component({
   selector: 'app-dashboard',
@@ -40,13 +42,16 @@ export class DashboardComponent {
     TaskStatus.Completed,
     TaskStatus.Finished
   ];
-  protected readonly addTaskForm: AddTaskForm = new FormGroup({
+  protected readonly addTaskForm: AddTaskForm = new FormGroup<AddTaskFormControls>({
     name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(150)]
     }),
     description: new FormControl('', { nonNullable: true, validators: [Validators.maxLength(1000)] }),
-    status: new FormControl(TaskStatus.InProgress, { nonNullable: true, validators: [Validators.required] }),
+    status: new FormControl<TaskStatus>(TaskStatus.InProgress, {
+      nonNullable: true,
+      validators: [Validators.required]
+    }),
     categoryId: new FormControl<number | null>(null, { validators: [Validators.required] })
   });
 
